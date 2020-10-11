@@ -15,8 +15,8 @@ python app.py
 * heroku create gprstorage-pro
 * heroku create gprstorage-stage
 ---
-* git remote add pro git@heroku.com:gprstorage-pro
-* git remote add stage git@heroku.com:gprstorage-stage
+* git remote add pro git@heroku.com:gprstorage-pro.git
+* git remote add stage git@heroku.com:gprstorage-stage.git
 * git push stage master
 * git push pro master
 
@@ -47,6 +47,10 @@ python app.py
 ---
 * heroku addons:create heroku-postgresql:hobby-dev --app gprstorage-stage
 * heroku run python manage.py db upgrade --app gprstorage-stage
- 
+* heroku addons:create heroku-postgresql:hobby-dev --app gprstorage-pro
+* heroku run python manage.py db upgrade --app gprstorage-pro
 
 
+# curl
+* curl -F "datafile=@/home/yuri/data/short.rdr" URL
+* curl -X "POST" -d "name1=value1" -d "name2=value2" URL

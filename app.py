@@ -25,7 +25,7 @@ def get_project(project_id: int):
     if project is not None:
         return jsonify(project.serialize)
     else:
-        return jsonify({"Error": f"There is no project with project_id={id}"})
+        return jsonify({"Error": f"There is no project with project_id={project_id}"})
 
 
 @app.route('/add_project', methods=['POST'])
