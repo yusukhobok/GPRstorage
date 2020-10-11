@@ -51,6 +51,12 @@ python app.py
 * heroku run python manage.py db upgrade --app gprstorage-pro
 
 
-# curl
+## curl
 * curl -F "datafile=@/home/yuri/data/short.rdr" URL
 * curl -X "POST" -d "name1=value1" -d "name2=value2" URL
+
+
+## authentication
+* pip install passlib
+* curl -i -X POST -H "Content-Type: application/json" -d '{"username":"miguel","password":"python"}' http://127.0.0.1:5000/api/users
+* curl -u miguel:python http://127.0.0.1:5000/projects

@@ -1,16 +1,32 @@
 import datetime
+from passlib.apps import custom_app_context as pwd_context
 
 from app import app, db
 
 
+class User(db.Model):
+    __tablename__ = "user"
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(32), index=True)
+    password_hash = db.Column(db.String(128))
+    projects = db.relationship('Project', backref='user', lazy=True)
+
+    def hash_password(self, password):
+        self.password_hash = pwd_context.encrypt(password)
+
+    def verify_password(self, password):
+        return pwd_context.verify(password, self.password_hash)
+
+
 class Project(db.Model):
-    __tablename__ = 'project'
+    __tablename__ = "project"
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(1000), nullable=False)
     notes = db.Column(db.Text)
     creation_datetime = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
     radargrams = db.relationship('Radargram', backref='project', lazy=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
     def __init__(self, name, notes):
         self.name = name
@@ -30,7 +46,7 @@ class Project(db.Model):
 
 
 class Radargram(db.Model):
-    __tablename__ = 'radargram'
+    __tablename__ = "radargram"
 
     id = db.Column(db.Integer, primary_key=True)
     project_id = db.Column(db.Integer, db.ForeignKey('project.id'), nullable=False)
@@ -88,7 +104,7 @@ class Radargram(db.Model):
 
 
 class Trace(db.Model):
-    __tablename__ = 'trace'
+    __tablename__ = "trace"
 
     id = db.Column(db.Integer, primary_key=True)
     radargram_id = db.Column(db.Integer, db.ForeignKey('radargram.id'), nullable=False)
@@ -125,3 +141,5 @@ class Trace(db.Model):
             "PK": self.PK,
             #"amplitudes": list(self.amplitudes)
         }
+
+

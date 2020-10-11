@@ -1,19 +1,32 @@
-from models import db, Radargram, Trace
+from models import db, Project, Radargram, Trace
 from radargramio import load_rdr
 import datetime
+from flask import g
 
+def _check_project_by_user(project_id):
+    projects = Project.query.filter_by(user_id=g.user.id, project_id=project_id)
+    return projects is not None
 
 def get_radargrams(project_id: int):
+    if not _check_project_by_user(project_id):
+        return None
+    projects = Project.query.filter_by(user_id=g.user.id, project_id=project_id)
+    if projects is None:
+        return None
     radargrams = Radargram.query.filter_by(project_id=project_id)
     return radargrams
 
 
 def get_radargram(project_id: int, radargram_id: int):
+    if not _check_project_by_user(project_id):
+        return None
     radargram = Radargram.query.filter_by(id=radargram_id, project_id=project_id).first()
     return radargram
 
 
 def add_radargram(project_id: int, filename: str, basename: str):
+    if not _check_project_by_user(project_id):
+        return None
     data = load_rdr(filename)
     if data is None: return False
     FileName, RadInfo, TrajectoryInfo, _, _, Notes, _ = data
@@ -35,11 +48,13 @@ def add_radargram(project_id: int, filename: str, basename: str):
     db.session.add(radargram)
     db.session.commit()
 
-    add_traces(radargram.id, RadInfo["DataTrace"], RadInfo["CoordTraces"], RadInfo["PK"])
+    add_traces(project_id, radargram.id, RadInfo["DataTrace"], RadInfo["CoordTraces"], RadInfo["PK"])
     return True
 
 
 def delete_radargram(project_id: int, radargram_id: int):
+    if not _check_project_by_user(project_id):
+        return None
     radargram = Radargram.query.filter_by(id=radargram_id, project_id=project_id).first()
     if radargram is not None:
         db.session.delete(radargram)
@@ -49,7 +64,9 @@ def delete_radargram(project_id: int, radargram_id: int):
         return False
 
 
-def add_traces(radargram_id: int, DataTrace, CoordTraces, PK):
+def add_traces(project_id: int, radargram_id: int, DataTrace, CoordTraces, PK):
+    if not _check_project_by_user(project_id):
+        return None
     X = CoordTraces["X"].values
     Y = CoordTraces["X"].values
     Z = CoordTraces["X"].values
@@ -64,17 +81,23 @@ def add_traces(radargram_id: int, DataTrace, CoordTraces, PK):
     db.session.commit()
 
 
-def get_traces_headers(radargram_id: int):
+def get_traces_headers(project_id: int, radargram_id: int):
+    if not _check_project_by_user(project_id):
+        return None
     traces = Trace.query.filter_by(radargram_id=radargram_id)
     return traces
 
 
-def get_trace(radargram_id: int, trace_id: int):
+def get_trace(project_id: int, radargram_id: int, trace_id: int):
+    if not _check_project_by_user(project_id):
+        return None
     trace = Trace.query.filter_by(id=trace_id, radargram_id=radargram_id).first()
     return trace
 
 
-def get_traces_amplitudes(radargram_id: int, start_num: int, finish_num: int, stage: int):
+def get_traces_amplitudes(project_id: int, radargram_id: int, start_num: int, finish_num: int, stage: int):
+    if not _check_project_by_user(project_id):
+        return None
     traces = []
     for num in range(int(start_num), int(finish_num)+1, int(stage)):
         trace = Trace.query.filter_by(number=num, radargram_id=radargram_id).first()
