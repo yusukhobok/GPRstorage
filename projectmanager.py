@@ -18,7 +18,7 @@ def add_project(name):
     project.user_id = g.user.id
     db.session.add(project)
     db.session.commit()
-    return True
+    return project
 
 
 def update_project(project_id, name, notes):
@@ -27,7 +27,7 @@ def update_project(project_id, name, notes):
     project.notes = notes
     db.session.add(project)
     db.session.commit()
-    return True
+    return project
 
 
 def delete_project(project_id):

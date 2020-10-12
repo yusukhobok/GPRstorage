@@ -60,3 +60,5 @@ python app.py
 * pip install passlib
 * curl -i -X POST -H "Content-Type: application/json" -d '{"username":"miguel","password":"python"}' http://127.0.0.1:5000/api/users
 * curl -u miguel:python http://127.0.0.1:5000/projects
+
+

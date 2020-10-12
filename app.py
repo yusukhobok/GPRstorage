@@ -13,30 +13,35 @@ db = SQLAlchemy(app)
 auth = HTTPBasicAuth()
 
 
-@app.route('/api/users', methods = ['POST'])
+@app.route('/api/users', methods=['POST'])
 def new_user():
     from models import User
     username = request.json.get('username')
     password = request.json.get('password')
     if username is None or password is None:
-        abort(400)
+        abort(400, "There is no credentials")
     if User.query.filter_by(username=username).first() is not None:
-        abort(400)
+        abort(400, "Existed username")
     user = User(username=username)
     user.hash_password(password)
     db.session.add(user)
     db.session.commit()
-    return jsonify({ 'username': user.username }), 201, {'Location': url_for('get_user', id = user.id, _external = True)}
+    return jsonify({'username': user.username}), 201, {'Location': url_for('get_user', user_id=user.id, _external=True)}
 
 
-@app.route('/api/users/<int:id>')
-def get_user(id):
+@app.route('/api/users/<int:user_id>', methods=['GET'])
+def get_user(user_id):
     from models import User
-    user = User.query.get(id)
+    user = User.query.get(user_id)
     if not user:
-        abort(400)
+        abort(400, f"There is no user with id={user_id}")
     return jsonify({'username': user.username})
 
+# @app.route('/api/users', methods=['GET'])
+# def get_users():
+#     from models import User
+#     users = User.query.all()
+#     return jsonify({"users": [user.username for user in users]})
 
 @auth.verify_password
 def verify_password(username, password):
@@ -48,7 +53,7 @@ def verify_password(username, password):
     return True
 
 
-@app.route('/projects', methods=['GET'])
+@app.route('/api/projects', methods=['GET'])
 @auth.login_required
 def get_projects():
     import projectmanager
@@ -56,7 +61,7 @@ def get_projects():
     return jsonify({"projects": [project.serialize for project in projects]})
 
 
-@app.route('/projects/<int:project_id>', methods=['GET'])
+@app.route('/api/projects/<int:project_id>', methods=['GET'])
 @auth.login_required
 def get_project(project_id: int):
     import projectmanager
@@ -64,54 +69,52 @@ def get_project(project_id: int):
     if project is not None:
         return jsonify(project.serialize)
     else:
-        return jsonify({"Error": f"There is no project with project_id={project_id}"})
+        abort(500, f"There is no project with project_id={project_id}")
 
 
-@app.route('/projects', methods=['POST'])
+@app.route('/api/projects', methods=['POST'])
 @auth.login_required
 def add_project():
     import projectmanager
-    data = request.form
     try:
-        name = data["name"]
-        ok = projectmanager.add_project(name)
-        if ok:
-            return "Add project"
+        name = request.json.get('name')
+        project = projectmanager.add_project(name)
+        if project is not None:
+            return jsonify(project.serialize)
         else:
-            return jsonify({"Error": "Refuse adding project"})
+            abort(500, "Refuse adding project")
     except KeyError:
-        return jsonify({"Error": "There is no project name"})
+        abort(500, "There is no project name")
 
 
-@app.route('/projects/<int:project_id>', methods=['PUT'])
+@app.route('/api/projects/<int:project_id>', methods=['PUT'])
 @auth.login_required
 def update_project(project_id: int):
     import projectmanager
-    data = request.form
     try:
-        name = data["name"]
-        notes = data["notes"]
-        ok = projectmanager.update_project(project_id, name, notes)
-        if ok:
-            return "Update project"
+        name = request.json.get('name')
+        notes = request.json.get('notes')
+        project = projectmanager.update_project(project_id, name, notes)
+        if project is not None:
+            return jsonify(project.serialize)
         else:
-            return jsonify({"Error": "Refuse updating project"})
+            abort(500, "Refuse updating project")
     except KeyError:
-        return jsonify({"Error": "There is no project name or project notes"})
+        abort(500, "There is no project name or project notes")
 
 
-@app.route('/projects/<int:project_id>', methods=['DELETE'])
+@app.route('/api/projects/<int:project_id>', methods=['DELETE'])
 @auth.login_required
 def delete_project(project_id: int):
     import projectmanager
     ok = projectmanager.delete_project(project_id)
     if ok:
-        return "Delete project"
+        return "Delete successfully"
     else:
-        return jsonify({"Error": f"There is no project with project_id='{id}'"})
+        abort(500, f"There is no project with project_id='{id}'")
 
 
-@app.route('/projects/<int:project_id>/radargrams', methods=['GET'])
+@app.route('/api/projects/<int:project_id>/radargrams', methods=['GET'])
 @auth.login_required
 def get_radargrams(project_id: int):
     import projectmanager, radargramsmanager
@@ -120,10 +123,10 @@ def get_radargrams(project_id: int):
         radargrams = radargramsmanager.get_radargrams(project_id)
         return jsonify({"radargrams": [radargram.serialize for radargram in radargrams]})
     else:
-        return jsonify({"Error": f"There is no project with project_id={id}"})
+        abort(500, f"There is no project with project_id={id}")
 
 
-@app.route('/projects/<int:project_id>/radargrams/<int:radargram_id>', methods=['GET'])
+@app.route('/api/projects/<int:project_id>/radargrams/<int:radargram_id>', methods=['GET'])
 @auth.login_required
 def get_radargram(project_id: int, radargram_id: int):
     import projectmanager, radargramsmanager
@@ -133,38 +136,38 @@ def get_radargram(project_id: int, radargram_id: int):
         if radargram is not None:
             return jsonify(radargram.serialize)
         else:
-            return jsonify({"Error": f"There is no radargram with radargram_id={radargram_id}"})
+            abort(500, f"There is no radargram with radargram_id={radargram_id}")
     else:
-        return jsonify({"Error": f"There is no project with project_id={project_id}"})
+        abort(500, f"There is no project with project_id={project_id}")
 
 
-@app.route('/projects/<int:project_id>/radargrams', methods=['POST'])
+@app.route('/api/projects/<int:project_id>/radargrams', methods=['POST'])
 @auth.login_required
 def add_radargram(project_id: int):
     import projectmanager, radargramsmanager
     project = projectmanager.get_project(project_id)
     if project is not None:
         if 'datafile' not in request.files:
-            return jsonify({"Error": "File is not send (1)"})
+            abort(500, "File is not send (1)")
         file = request.files['datafile']
         if not file:
-            return jsonify({"Error": "File is not send (2)"})
+            abort(500, "File is not send (2)")
 
         basename = os.path.basename(file.filename)
         filename = translit(file.filename, 'ru', reversed=True)
         filename = secure_filename(filename)
         filename = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(filename)
-        ok = radargramsmanager.add_radargram(project_id, filename, basename)
-        if ok:
-            return "Add radargram"
+        radargram = radargramsmanager.add_radargram(project_id, filename, basename)
+        if radargram is not None:
+            return jsonify(radargram.serialize)
         else:
-            return jsonify({"Error": "Refuse adding radargram"})
+            abort(500, "Refuse adding radargram")
     else:
         return jsonify({"Error": f"There is no project with project_id={id}"})
 
 
-@app.route('/projects/<int:project_id>/radargrams/<int:radargram_id>', methods=['DELETE'])
+@app.route('/api/projects/<int:project_id>/radargrams/<int:radargram_id>', methods=['DELETE'])
 @auth.login_required
 def delete_radargram(project_id: int, radargram_id: int):
     import projectmanager, radargramsmanager
@@ -172,14 +175,14 @@ def delete_radargram(project_id: int, radargram_id: int):
     if project is not None:
         ok = radargramsmanager.delete_radargram(project_id, radargram_id)
         if ok:
-            return "Delete radargram"
+            return "Delete successfully"
         else:
-            return jsonify({"Error": "Refuse deleting radargram"})
+            abort(500, "Refuse deleting radargram")
     else:
         return jsonify({"Error": f"There is no project with project_id={id}"})
 
 
-@app.route('/projects/<int:project_id>/radargrams/<int:radargram_id>/traces/headers', methods=['GET'])
+@app.route('/api/projects/<int:project_id>/radargrams/<int:radargram_id>/traces/headers', methods=['GET'])
 @auth.login_required
 def get_traces_headers(project_id: int, radargram_id: int):
     import projectmanager, radargramsmanager
@@ -190,12 +193,12 @@ def get_traces_headers(project_id: int, radargram_id: int):
             traces = radargramsmanager.get_traces_headers(project_id, radargram_id)
             return jsonify({"traces": [trace.serialize for trace in traces]})
         else:
-            return jsonify({"Error": f"There is no radargram with radargram_id={radargram_id}"})
+            abort(500, f"There is no radargram with radargram_id={radargram_id}")
     else:
-        return jsonify({"Error": f"There is no project with project_id={id}"})
+        abort(500, f"There is no project with project_id={id}")
 
 
-@app.route('/projects/<int:project_id>/radargrams/<int:radargram_id>/traces/<int:trace_id>', methods=['GET'])
+@app.route('/api/projects/<int:project_id>/radargrams/<int:radargram_id>/traces/<int:trace_id>', methods=['GET'])
 @auth.login_required
 def get_traces(project_id: int, radargram_id: int, trace_id: int):
     import projectmanager, radargramsmanager
@@ -209,14 +212,14 @@ def get_traces(project_id: int, radargram_id: int, trace_id: int):
                 data.update({"amplitudes": list(trace.amplitudes)})
                 return jsonify(data)
             else:
-                return jsonify({"Error": f"There is no trace with trace_id={trace_id}"})
+                abort(500, f"There is no trace with trace_id={trace_id}")
         else:
-            return jsonify({"Error": f"There is no radargram with radargram_id={radargram_id}"})
+            abort(500, f"There is no radargram with radargram_id={radargram_id}")
     else:
-        return jsonify({"Error": f"There is no project with project_id={id}"})
+        abort(500, f"There is no project with project_id={id}")
 
 
-@app.route('/projects/<int:project_id>/radargrams/<int:radargram_id>/traces/amplitudes/<int:start_num>/<int:finish_num>/<int:stage>', methods=['GET'])
+@app.route('/api/projects/<int:project_id>/radargrams/<int:radargram_id>/traces/amplitudes/<int:start_num>/<int:finish_num>/<int:stage>', methods=['GET'])
 @auth.login_required
 def get_traces_amplitudes(project_id: int, radargram_id: int, start_num: int, finish_num: int, stage: int):
     import projectmanager, radargramsmanager
@@ -227,9 +230,9 @@ def get_traces_amplitudes(project_id: int, radargram_id: int, start_num: int, fi
             traces = radargramsmanager.get_traces_amplitudes(project_id, radargram_id, start_num, finish_num, stage)
             return jsonify({"amplitudes": [list(trace.amplitudes) for trace in traces]})
         else:
-            return jsonify({"Error": f"There is no radargram with radargram_id={radargram_id}"})
+            abort(500, f"There is no radargram with radargram_id={radargram_id}")
     else:
-        return jsonify({"Error": f"There is no project with project_id={id}"})
+        abort(500, f"There is no project with project_id={id}")
 
 
 

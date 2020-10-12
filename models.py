@@ -9,7 +9,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(32), index=True)
     password_hash = db.Column(db.String(128))
-    projects = db.relationship('Project', backref='user', lazy=True)
+    projects = db.relationship('Project', backref='user', cascade="all, delete-orphan")
 
     def hash_password(self, password):
         self.password_hash = pwd_context.encrypt(password)
@@ -25,7 +25,7 @@ class Project(db.Model):
     name = db.Column(db.String(1000), nullable=False)
     notes = db.Column(db.Text)
     creation_datetime = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
-    radargrams = db.relationship('Radargram', backref='project', lazy=True)
+    radargrams = db.relationship('Radargram', backref='project', cascade="all, delete-orphan")
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
     def __init__(self, name, notes):
@@ -62,7 +62,7 @@ class Radargram(db.Model):
     antenna_name = db.Column(db.String(1000), nullable=False)
     frequency = db.Column(db.Float, nullable=False)
     creation_datetime = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
-    traces = db.relationship('Trace', backref='radargram', lazy=True)
+    traces = db.relationship('Trace', backref='radargram', cascade="all, delete-orphan")
 
     def __init__(self, project_id, name, notes, stage_between_traces, time_base, traces_count, samples_count, distance_between_antennas,
                  default_velocity, GPR_unit, antenna_name, frequency, creation_datetime):

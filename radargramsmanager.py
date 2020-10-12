@@ -4,13 +4,13 @@ import datetime
 from flask import g
 
 def _check_project_by_user(project_id):
-    projects = Project.query.filter_by(user_id=g.user.id, project_id=project_id)
+    projects = Project.query.filter_by(user_id=g.user.id, id=project_id)
     return projects is not None
 
 def get_radargrams(project_id: int):
     if not _check_project_by_user(project_id):
         return None
-    projects = Project.query.filter_by(user_id=g.user.id, project_id=project_id)
+    projects = Project.query.filter_by(user_id=g.user.id, id=project_id)
     if projects is None:
         return None
     radargrams = Radargram.query.filter_by(project_id=project_id)
@@ -49,7 +49,7 @@ def add_radargram(project_id: int, filename: str, basename: str):
     db.session.commit()
 
     add_traces(project_id, radargram.id, RadInfo["DataTrace"], RadInfo["CoordTraces"], RadInfo["PK"])
-    return True
+    return radargram
 
 
 def delete_radargram(project_id: int, radargram_id: int):
