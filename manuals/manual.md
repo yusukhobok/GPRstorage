@@ -61,4 +61,9 @@ python app.py
 * curl -i -X POST -H "Content-Type: application/json" -d '{"username":"miguel","password":"python"}' http://127.0.0.1:5000/api/users
 * curl -u miguel:python http://127.0.0.1:5000/projects
 
+## URL
+* http://127.0.0.1:5000/
+* https://gprstorage-stage.herokuapp.com/
+* https://gprstorage-pro.herokuapp.com/
+
 

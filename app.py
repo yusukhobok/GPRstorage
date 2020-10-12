@@ -123,7 +123,7 @@ def get_radargrams(project_id: int):
         radargrams = radargramsmanager.get_radargrams(project_id)
         return jsonify({"radargrams": [radargram.serialize for radargram in radargrams]})
     else:
-        abort(500, f"There is no project with project_id={id}")
+        abort(500, f"There is no project with project_id={project_id}")
 
 
 @app.route('/api/projects/<int:project_id>/radargrams/<int:radargram_id>', methods=['GET'])
@@ -179,7 +179,7 @@ def delete_radargram(project_id: int, radargram_id: int):
         else:
             abort(500, "Refuse deleting radargram")
     else:
-        return jsonify({"Error": f"There is no project with project_id={id}"})
+        return jsonify({"Error": f"There is no project with project_id={project_id}"})
 
 
 @app.route('/api/projects/<int:project_id>/radargrams/<int:radargram_id>/traces/headers', methods=['GET'])
@@ -195,7 +195,7 @@ def get_traces_headers(project_id: int, radargram_id: int):
         else:
             abort(500, f"There is no radargram with radargram_id={radargram_id}")
     else:
-        abort(500, f"There is no project with project_id={id}")
+        abort(500, f"There is no project with project_id={project_id}")
 
 
 @app.route('/api/projects/<int:project_id>/radargrams/<int:radargram_id>/traces/<int:trace_id>', methods=['GET'])
@@ -216,7 +216,7 @@ def get_traces(project_id: int, radargram_id: int, trace_id: int):
         else:
             abort(500, f"There is no radargram with radargram_id={radargram_id}")
     else:
-        abort(500, f"There is no project with project_id={id}")
+        abort(500, f"There is no project with project_id={project_id}")
 
 
 @app.route('/api/projects/<int:project_id>/radargrams/<int:radargram_id>/traces/amplitudes/<int:start_num>/<int:finish_num>/<int:stage>', methods=['GET'])
@@ -232,7 +232,7 @@ def get_traces_amplitudes(project_id: int, radargram_id: int, start_num: int, fi
         else:
             abort(500, f"There is no radargram with radargram_id={radargram_id}")
     else:
-        abort(500, f"There is no project with project_id={id}")
+        abort(500, f"There is no project with project_id={project_id}")
 
 
 
