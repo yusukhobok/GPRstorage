@@ -13,7 +13,7 @@ db = SQLAlchemy(app)
 auth = HTTPBasicAuth()
 
 
-@app.route('/api/users', methods=['POST'])
+@app.route('/api/users/registration', methods=['POST'])
 def new_user():
     from models import User
     username = request.json.get('username')
@@ -36,6 +36,19 @@ def get_user(user_id):
     if not user:
         abort(400, f"There is no user with id={user_id}")
     return jsonify({'username': user.username})
+
+
+@app.route('/api/users/signin', methods=['POST'])
+def enter_user():
+    from models import User
+    username = request.json.get('username')
+    password = request.json.get('password')
+    if username is None or password is None:
+        abort(400, "There is no credentials")
+    if verify_password(username, password):
+        return jsonify({'username': g.user.username}), 201, {'Location': url_for('get_user', user_id=g.user.id, _external=True)}
+    else:
+        abort(400, f"There is no such username or password")
 
 # @app.route('/api/users', methods=['GET'])
 # def get_users():
