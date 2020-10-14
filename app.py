@@ -2,6 +2,7 @@ import os
 from flask import Flask, request, jsonify, abort, url_for, g
 from flask_sqlalchemy import SQLAlchemy
 from flask_httpauth import HTTPBasicAuth
+from flask_cors import CORS
 from werkzeug.utils import secure_filename
 from transliterate import translit
 
@@ -9,6 +10,7 @@ from transliterate import translit
 app = Flask(__name__)
 app.config.from_object(os.environ['APP_SETTINGS'])
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+CORS(app)
 db = SQLAlchemy(app)
 auth = HTTPBasicAuth()
 
