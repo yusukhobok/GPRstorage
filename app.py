@@ -93,7 +93,8 @@ def add_project():
     import projectmanager
     try:
         name = request.json.get('name')
-        project = projectmanager.add_project(name)
+        notes = request.json.get('notes')
+        project = projectmanager.add_project(name, notes)
         if project is not None:
             return jsonify(project.serialize)
         else:

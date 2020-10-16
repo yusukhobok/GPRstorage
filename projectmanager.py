@@ -13,8 +13,8 @@ def get_project(project_id):
     return project
 
 
-def add_project(name):
-    project = Project(name, "")
+def add_project(name, notes):
+    project = Project(name, notes)
     project.user_id = g.user.id
     db.session.add(project)
     db.session.commit()
