@@ -24,13 +24,17 @@ def get_radargram(project_id: int, radargram_id: int):
     return radargram
 
 
-def add_radargram(project_id: int, filename: str, basename: str):
+def add_radargram(project_id: int, name: str, file, filename: str):
     if not _check_project_by_user(project_id):
         return None
-    data = load_rdr(filename)
+
+    from s3work import upload_file
+    upload_file(file, filename)
+    file.seek(0)
+
+    data = load_rdr(file)
     if data is None: return False
-    FileName, RadInfo, TrajectoryInfo, _, _, Notes, _ = data
-    name = basename
+    RadInfo, TrajectoryInfo, _, _, Notes, _ = data
     notes = Notes
     stage_between_traces = RadInfo["dL"]
     time_base = RadInfo["TimeBase"]
@@ -43,7 +47,7 @@ def add_radargram(project_id: int, filename: str, basename: str):
     frequency = RadInfo["Frequency"]
     creation_datetime = datetime.datetime.utcnow()
 
-    radargram = Radargram(project_id, name, notes, stage_between_traces, time_base, traces_count, samples_count,
+    radargram = Radargram(project_id, name, filename, notes, stage_between_traces, time_base, traces_count, samples_count,
                           distance_between_antennas, default_velocity, GPR_unit, antenna_name, frequency, creation_datetime)
     db.session.add(radargram)
     db.session.commit()

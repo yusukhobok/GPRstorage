@@ -27,6 +27,9 @@ python app.py
 * .env file:
     * source env/bin/activate
     * export APP_SETTINGS="config.DevelopmentConfig"
+    * export AWS_ACCESS_KEY_ID="AKIAI2TGNYGDCMITV4CQ"
+    * export AWS_SECRET_ACCESS_KEY="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"
+    * export FLASKS3_BUCKET_NAME="gprstorage"
 ---
 * echo "source `which activate.sh`" >> ~/.bashrc
 * source ~/.bashrc

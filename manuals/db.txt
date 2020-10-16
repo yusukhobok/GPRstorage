@@ -12,39 +12,39 @@ Get user:
 curl http://127.0.0.1:5000/api/users/user_id
 
 Get projects:
-curl -u username:password http://127.0.0.1:5000//api/projects
+curl -u yuri:123 http://127.0.0.1:5000//api/projects
 
 Get project:
-curl -u username:password http://127.0.0.1:5000//api/projects/project_id
+curl -u yuri:123 http://127.0.0.1:5000//api/projects/project_id
 
 Add new project:
-curl -u username:password -X POST -H "Content-Type: application/json" -d '{"name":"..."}' http://127.0.0.1:5000//api/projects
+curl -u yuri:123 -X POST -H "Content-Type: application/json" -d '{"name":"...", "notes": "..."}' http://127.0.0.1:5000//api/projects
 
 Update project:
-curl -u username:password -X PUT -H "Content-Type: application/json" -d '{"name":"...", "notes": "..."}' http://127.0.0.1:5000//api/projects/project_id
+curl -u yuri:123 -X PUT -H "Content-Type: application/json" -d '{"name":"...", "notes": "..."}' http://127.0.0.1:5000//api/projects/project_id
 
 Delete project:
-curl -u username:password -X DELETE  http://127.0.0.1:5000//api/projects/project_id
+curl -u yuri:123 -X DELETE  http://127.0.0.1:5000//api/projects/project_id
 
 Get all radargrams in project:
-curl -u username:password http://127.0.0.1:5000//api/projects/project_id/radargrams
+curl -u yuri:123 http://127.0.0.1:5000//api/projects/project_id/radargrams
 
 Get radargram by id:
-curl -u username:password http://127.0.0.1:5000//api/projects/project_id/radargrams/radargram_id
+curl -u yuri:123 http://127.0.0.1:5000//api/projects/project_id/radargrams/radargram_id
 
 Add new radargram:
-curl -u username:password -F "datafile=@/home/yuri/data/short.rdr" http://127.0.0.1:5000//api/projects/project_id/radargrams
+curl -u yuri:123 -F "datafile=@/home/yuri/data/short.rdr" http://127.0.0.1:5000//api/projects/project_id/radargrams
 
 Delete radargram by id:
-curl -u username:password -X DELETE http://127.0.0.1:5000//api/projects/project_id/radargrams/radargram_id
+curl -u yuri:123 -X DELETE http://127.0.0.1:5000//api/projects/project_id/radargrams/radargram_id
 
 Get headers of all traces in radargram:
-curl -u username:password http://127.0.0.1:5000//api/projects/project_id/radargrams/radargram_id/traces/headers
+curl -u yuri:123 http://127.0.0.1:5000//api/projects/project_id/radargrams/radargram_id/traces/headers
 
 Get trace by id:
-curl -u username:password http://127.0.0.1:5000//api/projects/project_id/radargrams/radargram_id/traces/trace_id
+curl -u yuri:123 http://127.0.0.1:5000//api/projects/project_id/radargrams/radargram_id/traces/trace_id
 
 Get amplitudes of traces from trace start_num to trace start_finish with stage:
-curl -u username:password http://127.0.0.1:5000//api/projects/project_id/radargrams/radargram_id/traces/amplitudes/start_num/finish_num/stage
+curl -u yuri:123 http://127.0.0.1:5000//api/projects/project_id/radargrams/radargram_id/traces/amplitudes/start_num/finish_num/stage
 
 

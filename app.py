@@ -6,6 +6,8 @@ from flask_cors import CORS
 from werkzeug.utils import secure_filename
 from transliterate import translit
 
+import flask_s3
+from flask_s3 import FlaskS3
 
 app = Flask(__name__)
 app.config.from_object(os.environ['APP_SETTINGS'])
@@ -13,6 +15,11 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 CORS(app)
 db = SQLAlchemy(app)
 auth = HTTPBasicAuth()
+
+app.config['FLASKS3_BUCKET_NAME'] = 'gprstorage'
+s3 = FlaskS3(app)
+s3.init_app(app)
+# flask_s3.create_all(app)
 
 
 @app.route('/api/users/registration', methods=['POST'])
@@ -50,7 +57,7 @@ def enter_user():
     if verify_password(username, password):
         return jsonify({'username': g.user.username}), 201, {'Location': url_for('get_user', user_id=g.user.id, _external=True)}
     else:
-        abort(400, f"There is no such username or password")
+        abort(400, "There is no such username or password")
 
 # @app.route('/api/users', methods=['GET'])
 # def get_users():
@@ -156,6 +163,13 @@ def get_radargram(project_id: int, radargram_id: int):
     else:
         abort(500, f"There is no project with project_id={project_id}")
 
+# @app.route('/api/test_upload', methods=['GET'])
+# def test_upload():
+#     # file = request.files['datafile']
+#     from s3work import upload_file, list_files, download_file
+#     # upload_file(file, file.filename)
+#     print(download_file("pop_001.rdr22"))
+
 
 @app.route('/api/projects/<int:project_id>/radargrams', methods=['POST'])
 @auth.login_required
@@ -168,13 +182,12 @@ def add_radargram(project_id: int):
         file = request.files['datafile']
         if not file:
             abort(500, "File is not send (2)")
-
-        basename = os.path.basename(file.filename)
+        name = os.path.basename(file.filename)
         filename = translit(file.filename, 'ru', reversed=True)
         filename = secure_filename(filename)
-        filename = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        file.save(filename)
-        radargram = radargramsmanager.add_radargram(project_id, filename, basename)
+        filename = os.path.join(f"{g.user.id}_{project_id}_{filename}")
+
+        radargram = radargramsmanager.add_radargram(project_id, name, file, filename)
         if radargram is not None:
             return jsonify(radargram.serialize)
         else:

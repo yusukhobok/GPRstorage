@@ -51,6 +51,7 @@ class Radargram(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     project_id = db.Column(db.Integer, db.ForeignKey('project.id'), nullable=False)
     name = db.Column(db.String(1000), nullable=False)
+    file_name = db.Column(db.String(5000), nullable=False)
     notes = db.Column(db.Text)
     stage_between_traces = db.Column(db.Float, nullable=False)
     time_base = db.Column(db.Float, nullable=False)
@@ -64,10 +65,11 @@ class Radargram(db.Model):
     creation_datetime = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
     traces = db.relationship('Trace', backref='radargram', cascade="all, delete-orphan")
 
-    def __init__(self, project_id, name, notes, stage_between_traces, time_base, traces_count, samples_count, distance_between_antennas,
+    def __init__(self, project_id, name, file_name, notes, stage_between_traces, time_base, traces_count, samples_count, distance_between_antennas,
                  default_velocity, GPR_unit, antenna_name, frequency, creation_datetime):
         self.project_id = project_id
         self.name = name
+        self.file_name = file_name
         self.notes = notes
         self.stage_between_traces = stage_between_traces
         self.time_base = time_base
@@ -89,6 +91,7 @@ class Radargram(db.Model):
             "id": self.id,
             "project_id": self.project_id,
             "name": self.name,
+            "file_name": self.file_name,
             "notes": self.notes,
             "stage_between_traces": self.stage_between_traces,
             "time_base": self.time_base,
