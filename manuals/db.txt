@@ -5,46 +5,55 @@ python manage.py db init
 python manage.py db migrate
 python manage.py db upgrade
 
+URLs:
+http://127.0.0.1:5000
+https://gprstorage-stage.herokuapp.com/
+https://gprstorage-pro.herokuapp.com/
+
+
 Add new user:
-curl -X POST -H "Content-Type: application/json" -d '{"username":"...","password":"..."}' http://127.0.0.1:5000/api/users
+curl -X POST -H "Content-Type: application/json" -d '{"username":"...","password":"..."}' https://gprstorage-stage.herokuapp.com/api/users
 
 Get user:
-curl http://127.0.0.1:5000/api/users/user_id
+curl https://gprstorage-stage.herokuapp.com/api/users/user_id
 
 Get projects:
-curl -u yuri:123 http://127.0.0.1:5000//api/projects
+curl -u yuri:123 https://gprstorage-stage.herokuapp.com/api/projects
 
 Get project:
-curl -u yuri:123 http://127.0.0.1:5000//api/projects/project_id
+curl -u yuri:123 https://gprstorage-stage.herokuapp.com/api/projects/project_id
 
 Add new project:
-curl -u yuri:123 -X POST -H "Content-Type: application/json" -d '{"name":"...", "notes": "..."}' http://127.0.0.1:5000//api/projects
+curl -u yuri:123 -X POST -H "Content-Type: application/json" -d '{"name":"...", "notes": "..."}' https://gprstorage-stage.herokuapp.com/api/projects
 
 Update project:
-curl -u yuri:123 -X PUT -H "Content-Type: application/json" -d '{"name":"...", "notes": "..."}' http://127.0.0.1:5000//api/projects/project_id
+curl -u yuri:123 -X PUT -H "Content-Type: application/json" -d '{"name":"...", "notes": "..."}' https://gprstorage-stage.herokuapp.com/api/projects/project_id
 
 Delete project:
-curl -u yuri:123 -X DELETE  http://127.0.0.1:5000//api/projects/project_id
+curl -u yuri:123 -X DELETE  https://gprstorage-stage.herokuapp.com/api/projects/project_id
 
 Get all radargrams in project:
-curl -u yuri:123 http://127.0.0.1:5000//api/projects/project_id/radargrams
+curl -u yuri:123 https://gprstorage-stage.herokuapp.com/api/projects/project_id/radargrams
 
 Get radargram by id:
-curl -u yuri:123 http://127.0.0.1:5000//api/projects/project_id/radargrams/radargram_id
+curl -u yuri:123 https://gprstorage-stage.herokuapp.com/api/projects/project_id/radargrams/radargram_id
+
+Get link for radaragram:
+curl -u yuri:123 https://gprstorage-stage.herokuapp.com/api/projects/project_id/radargrams/radargram_id/link
 
 Add new radargram:
-curl -u yuri:123 -F "datafile=@/home/yuri/data/short.rdr" http://127.0.0.1:5000//api/projects/project_id/radargrams
+curl -u yuri:123 -F "datafile=@/home/yuri/data/short.rdr" https://gprstorage-stage.herokuapp.com/api/projects/project_id/radargrams
 
 Delete radargram by id:
-curl -u yuri:123 -X DELETE http://127.0.0.1:5000//api/projects/project_id/radargrams/radargram_id
+curl -u yuri:123 -X DELETE https://gprstorage-stage.herokuapp.com/api/projects/project_id/radargrams/radargram_id
 
 Get headers of all traces in radargram:
-curl -u yuri:123 http://127.0.0.1:5000//api/projects/project_id/radargrams/radargram_id/traces/headers
+curl -u yuri:123 https://gprstorage-stage.herokuapp.com/api/projects/project_id/radargrams/radargram_id/traces/headers
 
 Get trace by id:
-curl -u yuri:123 http://127.0.0.1:5000//api/projects/project_id/radargrams/radargram_id/traces/trace_id
+curl -u yuri:123 https://gprstorage-stage.herokuapp.com/api/projects/project_id/radargrams/radargram_id/traces/trace_id
 
 Get amplitudes of traces from trace start_num to trace start_finish with stage:
-curl -u yuri:123 http://127.0.0.1:5000//api/projects/project_id/radargrams/radargram_id/traces/amplitudes/start_num/finish_num/stage
+curl -u yuri:123 https://gprstorage-stage.herokuapp.com/api/projects/project_id/radargrams/radargram_id/traces/amplitudes/start_num/finish_num/stage
 
 

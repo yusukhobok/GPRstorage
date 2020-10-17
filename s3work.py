@@ -5,6 +5,9 @@ from botocore.exceptions import ClientError
 
 
 def upload_file(file, file_name: str):
+    print(app.config['AWS_ACCESS_KEY_ID'])
+    print(app.config['AWS_SECRET_ACCESS_KEY'])
+    print(app.config['FLASKS3_BUCKET_NAME'])
     data = file.read()
     s3_client = boto3.client(service_name='s3', region_name='ap-northeast-1',
                              aws_access_key_id=app.config['AWS_ACCESS_KEY_ID'],

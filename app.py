@@ -120,7 +120,7 @@ def update_project(project_id: int):
         if project is not None:
             return jsonify(project.serialize)
         else:
-            abort(500, "Refuse updating project")
+            abort(500, f"There is no project with project_id='{id}'")
     except KeyError:
         abort(500, "There is no project name or project notes")
 
