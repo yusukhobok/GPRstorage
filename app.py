@@ -163,12 +163,19 @@ def get_radargram(project_id: int, radargram_id: int):
     else:
         abort(500, f"There is no project with project_id={project_id}")
 
-# @app.route('/api/test_upload', methods=['GET'])
-# def test_upload():
-#     # file = request.files['datafile']
-#     from s3work import upload_file, list_files, download_file
-#     # upload_file(file, file.filename)
-#     print(download_file("pop_001.rdr22"))
+@app.route('/api/projects/<int:project_id>/radargrams/<int:radargram_id>/link', methods=['GET'])
+@auth.login_required
+def get_radargram_link(project_id: int, radargram_id: int):
+    import projectmanager, radargramsmanager
+    project = projectmanager.get_project(project_id)
+    if project is not None:
+        link = radargramsmanager.get_radargram_link(project_id, radargram_id)
+        if link is not None:
+            return link
+        else:
+            abort(500, f"There is no radargram with radargram_id={radargram_id}")
+    else:
+        abort(500, f"There is no project with project_id={project_id}")
 
 
 @app.route('/api/projects/<int:project_id>/radargrams', methods=['POST'])

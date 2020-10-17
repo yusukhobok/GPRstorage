@@ -24,6 +24,16 @@ def get_radargram(project_id: int, radargram_id: int):
     return radargram
 
 
+def get_radargram_link(project_id: int, radargram_id: int):
+    if not _check_project_by_user(project_id):
+        return None
+    radargram = Radargram.query.filter_by(id=radargram_id, project_id=project_id).first()
+    file_name = radargram.file_name
+    from s3work import get_link
+    link = get_link(file_name)
+    return link
+
+
 def add_radargram(project_id: int, name: str, file, filename: str):
     if not _check_project_by_user(project_id):
         return None
@@ -61,6 +71,8 @@ def delete_radargram(project_id: int, radargram_id: int):
         return None
     radargram = Radargram.query.filter_by(id=radargram_id, project_id=project_id).first()
     if radargram is not None:
+        from s3work import delete_file
+        delete_file(radargram.file_name)
         db.session.delete(radargram)
         db.session.commit()
         return True

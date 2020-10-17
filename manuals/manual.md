@@ -37,7 +37,14 @@ python app.py
 
 ## heroku settings
 * heroku config:set APP_SETTINGS=config.StagingConfig --remote stage
+* heroku config:set AWS_ACCESS_KEY_ID="AKIAI2TGNYGDCMITV4CQ" --remote stage
+* heroku config:set AWS_SECRET_ACCESS_KEY="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" --remote stage
+* heroku config:set FLASKS3_BUCKET_NAME="gprstorage" --remote stage
+---
 * heroku config:set APP_SETTINGS=config.ProductionConfig --remote pro
+* heroku config:set AWS_ACCESS_KEY_ID="AKIAI2TGNYGDCMITV4CQ" --remote pro
+* heroku config:set AWS_SECRET_ACCESS_KEY="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" --remote pro
+* heroku config:set FLASKS3_BUCKET_NAME="gprstorage" --remote pro
 ---
 * heroku run python app.py --app gprstorage-stage
 * heroku run python app.py --app gprstorage-pro
