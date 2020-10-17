@@ -29,7 +29,7 @@ def delete_file(file_name: str):
     s3_client = boto3.client(service_name='s3', region_name='ap-northeast-1',
                              aws_access_key_id=app.config['AWS_ACCESS_KEY_ID'],
                              aws_secret_access_key=app.config['AWS_SECRET_ACCESS_KEY'])
-    s3_client.delete_object(Bucket=app.config['FLASKS3_BUCKET_NAME'], Key=file_name).delete()
+    s3_client.delete_object(Bucket=app.config['FLASKS3_BUCKET_NAME'], Key=file_name)
 
 
 def list_files():
