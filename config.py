@@ -18,16 +18,19 @@ class Config(object):
 
 class ProductionConfig(Config):
     DEBUG = False
+    FLASKS3_BUCKET_NAME = "gprstorage"
 
 
 class StagingConfig(Config):
     DEVELOPMENT = True
     DEBUG = True
+    FLASKS3_BUCKET_NAME = "gprstorage"
 
 
 class DevelopmentConfig(Config):
     DEVELOPMENT = True
     DEBUG = True
+    FLASKS3_BUCKET_NAME = "gprstorage-local"
 
 
 class TestingConfig(Config):

@@ -16,7 +16,6 @@ CORS(app)
 db = SQLAlchemy(app)
 auth = HTTPBasicAuth()
 
-app.config['FLASKS3_BUCKET_NAME'] = 'gprstorage'
 s3 = FlaskS3(app)
 s3.init_app(app)
 # flask_s3.create_all(app)

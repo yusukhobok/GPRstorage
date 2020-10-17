@@ -29,7 +29,6 @@ python app.py
     * export APP_SETTINGS="config.DevelopmentConfig"
     * export AWS_ACCESS_KEY_ID="AKIAI2TGNYGDCMITV4CQ"
     * export AWS_SECRET_ACCESS_KEY="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"
-    * export FLASKS3_BUCKET_NAME="gprstorage"
 ---
 * echo "source `which activate.sh`" >> ~/.bashrc
 * source ~/.bashrc
@@ -39,12 +38,10 @@ python app.py
 * heroku config:set APP_SETTINGS=config.StagingConfig --remote stage
 * heroku config:set AWS_ACCESS_KEY_ID="AKIAI2TGNYGDCMITV4CQ" --remote stage
 * heroku config:set AWS_SECRET_ACCESS_KEY="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" --remote stage
-* heroku config:set FLASKS3_BUCKET_NAME="gprstorage" --remote stage
 ---
 * heroku config:set APP_SETTINGS=config.ProductionConfig --remote pro
 * heroku config:set AWS_ACCESS_KEY_ID="AKIAI2TGNYGDCMITV4CQ" --remote pro
 * heroku config:set AWS_SECRET_ACCESS_KEY="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" --remote pro
-* heroku config:set FLASKS3_BUCKET_NAME="gprstorage" --remote pro
 ---
 * heroku run python app.py --app gprstorage-stage
 * heroku run python app.py --app gprstorage-pro
