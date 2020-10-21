@@ -2,7 +2,7 @@ import os
 from flask import Flask, request, jsonify, abort, url_for, g
 from flask_sqlalchemy import SQLAlchemy
 from flask_httpauth import HTTPBasicAuth
-from flask_cors import CORS
+# from flask_cors import CORS
 from werkzeug.utils import secure_filename
 from transliterate import translit
 
@@ -10,10 +10,16 @@ import flask_s3
 from flask_s3 import FlaskS3
 
 app = Flask(__name__, static_url_path='', static_folder='')
-CORS(app)
-
+# CORS(app)
 app.config.from_object(os.environ['APP_SETTINGS'])
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+@app.after_request
+def after_request(response):
+  response.headers.add('Access-Control-Allow-Origin', '*')
+  response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+  response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+  return response
 
 db = SQLAlchemy(app)
 auth = HTTPBasicAuth()
@@ -180,7 +186,7 @@ def get_radargram_link(project_id: int, radargram_id: int):
 
 
 @app.route('/api/projects/<int:project_id>/radargrams', methods=['POST'])
-# @auth.login_required
+@auth.login_required
 def add_radargram(project_id: int):
     import projectmanager, radargramsmanager
     project = projectmanager.get_project(project_id)
@@ -197,11 +203,11 @@ def add_radargram(project_id: int):
 
         return "HELLO"
 
-        # radargram = radargramsmanager.add_radargram(project_id, name, file, filename)
-        # if radargram is not None:
-        #     return jsonify(radargram.serialize)
-        # else:
-        #     abort(500, "Refuse adding radargram")
+        radargram = radargramsmanager.add_radargram(project_id, name, file, filename)
+        if radargram is not None:
+            return jsonify(radargram.serialize)
+        else:
+            abort(500, "Refuse adding radargram")
     else:
         return jsonify({"Error": f"There is no project with project_id={id}"})
 
