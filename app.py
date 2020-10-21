@@ -6,34 +6,14 @@ from flask_cors import CORS
 from werkzeug.utils import secure_filename
 from transliterate import translit
 
-# from sanic import Sanic
-# from sanic.response import text
-# from sanic_cors import CORS, cross_origin
-
 import flask_s3
 from flask_s3 import FlaskS3
 
 app = Flask(__name__, static_url_path='', static_folder='')
-# app = Sanic(__name__)
 CORS(app)
 
 app.config.from_object(os.environ['APP_SETTINGS'])
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-# cors = CORS(app, resources={r'/*': {"origins": '*'}})
-# cors = CORS(app, resources={r'/*': {"origins": 'https://yusukhobok.github.io'}})
-# cors = CORS(app, resources={
-#         r'/api/*': {
-#             "Access-Control-Allow-Origin": 'https://yusukhobok.github.io',
-#             "Access-Control-Allow-Credentials": True,
-#             'supports_credentials': True
-#         },
-#     },
-#     supports_credentials=True,
-#     expose_headers="*"
-# )
-# cors = CORS()
-# cors.init_app(app)
 
 db = SQLAlchemy(app)
 auth = HTTPBasicAuth()
@@ -215,11 +195,13 @@ def add_radargram(project_id: int):
         filename = secure_filename(filename)
         filename = os.path.join(f"{g.user.id}_{project_id}_{filename}")
 
-        radargram = radargramsmanager.add_radargram(project_id, name, file, filename)
-        if radargram is not None:
-            return jsonify(radargram.serialize)
-        else:
-            abort(500, "Refuse adding radargram")
+        return "HELLO"
+
+        # radargram = radargramsmanager.add_radargram(project_id, name, file, filename)
+        # if radargram is not None:
+        #     return jsonify(radargram.serialize)
+        # else:
+        #     abort(500, "Refuse adding radargram")
     else:
         return jsonify({"Error": f"There is no project with project_id={id}"})
 

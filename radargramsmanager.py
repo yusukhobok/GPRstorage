@@ -38,9 +38,9 @@ def add_radargram(project_id: int, name: str, file, filename: str):
     if not _check_project_by_user(project_id):
         return None
 
-    # from s3work import upload_file
-    # upload_file(file, filename)
-    # file.seek(0)
+    from s3work import upload_file
+    upload_file(file, filename)
+    file.seek(0)
 
     data = load_rdr(file)
     if data is None: return False

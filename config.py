@@ -19,18 +19,21 @@ class Config(object):
 class ProductionConfig(Config):
     DEBUG = False
     FLASKS3_BUCKET_NAME = "gprstorage"
+    UPLOAD_FOLDER = '/tmp/'
 
 
 class StagingConfig(Config):
     DEVELOPMENT = True
     DEBUG = True
     FLASKS3_BUCKET_NAME = "gprstorage"
+    UPLOAD_FOLDER = '/tmp/'
 
 
 class DevelopmentConfig(Config):
     DEVELOPMENT = True
     DEBUG = True
     FLASKS3_BUCKET_NAME = "gprstorage-local"
+    UPLOAD_FOLDER = 'tmp/'
 
 
 class TestingConfig(Config):
