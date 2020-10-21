@@ -11,8 +11,8 @@ from flask_s3 import FlaskS3
 
 app = Flask(__name__, static_url_path='', static_folder='')
 # CORS(app)
-cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
-app.config['CORS_HEADERS'] = 'Content-Type'
+cors = CORS(app, resources={r"/api/*": {"origins": "*"}}, allow_headers='Content-Type')
+# app.config['CORS_HEADERS'] = 'Content-Type'
 
 app.config.from_object(os.environ['APP_SETTINGS'])
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -190,7 +190,6 @@ def get_radargram_link(project_id: int, radargram_id: int):
 
 @app.route('/api/projects/<int:project_id>/radargrams', methods=['POST'])
 @auth.login_required
-@cross_origin(origin='*', headers=['Content-Type', 'Authorization'])
 def add_radargram(project_id: int):
     import projectmanager, radargramsmanager
     project = projectmanager.get_project(project_id)
@@ -204,8 +203,6 @@ def add_radargram(project_id: int):
         filename = translit(file.filename, 'ru', reversed=True)
         filename = secure_filename(filename)
         filename = os.path.join(f"{g.user.id}_{project_id}_{filename}")
-
-        return "HELLO"
 
         radargram = radargramsmanager.add_radargram(project_id, name, file, filename)
         if radargram is not None:
