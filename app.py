@@ -12,7 +12,8 @@ from flask_s3 import FlaskS3
 app = Flask(__name__)
 app.config.from_object(os.environ['APP_SETTINGS'])
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-CORS(app)
+# CORS(app)
+cors = CORS(app, resources={r'/*': {"origins": '*'}})
 db = SQLAlchemy(app)
 auth = HTTPBasicAuth()
 
