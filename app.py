@@ -13,7 +13,7 @@ from transliterate import translit
 import flask_s3
 from flask_s3 import FlaskS3
 
-app = Flask(__name__, static_url_path='')
+app = Flask(__name__, static_url_path='', static_folder='')
 # app = Sanic(__name__)
 CORS(app)
 
