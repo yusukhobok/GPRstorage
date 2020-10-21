@@ -2,17 +2,25 @@ import os
 from flask import Flask, request, jsonify, abort, url_for, g
 from flask_sqlalchemy import SQLAlchemy
 from flask_httpauth import HTTPBasicAuth
-from flask_cors import CORS, cross_origin
+# from flask_cors import CORS
 from werkzeug.utils import secure_filename
 from transliterate import translit
+
+from sanic import Sanic
+from sanic.response import text
+from sanic_cors import CORS, cross_origin
 
 import flask_s3
 from flask_s3 import FlaskS3
 
-app = Flask(__name__)
+# app = Flask(__name__)
+
+app = Sanic(__name__)
+CORS(app)
+
 app.config.from_object(os.environ['APP_SETTINGS'])
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-# CORS(app)
+CORS(app)
 # cors = CORS(app, resources={r'/*': {"origins": '*'}})
 # cors = CORS(app, resources={r'/*': {"origins": 'https://yusukhobok.github.io'}})
 # cors = CORS(app, resources={
@@ -25,8 +33,8 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 #     supports_credentials=True,
 #     expose_headers="*"
 # )
-cors = CORS()
-cors.init_app(app)
+# cors = CORS()
+# cors.init_app(app)
 
 db = SQLAlchemy(app)
 auth = HTTPBasicAuth()
@@ -193,7 +201,6 @@ def get_radargram_link(project_id: int, radargram_id: int):
 
 
 @app.route('/api/projects/<int:project_id>/radargrams', methods=['POST'])
-@cross_origin()
 @auth.login_required
 def add_radargram(project_id: int):
     import projectmanager, radargramsmanager
