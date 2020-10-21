@@ -195,10 +195,10 @@ def add_radargram(project_id: int):
     project = projectmanager.get_project(project_id)
     if project is not None:
         if 'datafile' not in request.files:
-            abort(500, "File is not send (1)")
+            abort(403, "File is not send (1)")
         file = request.files['datafile']
         if not file:
-            abort(500, "File is not send (2)")
+            abort(404, "File is not send (2)")
         name = os.path.basename(file.filename)
         filename = translit(file.filename, 'ru', reversed=True)
         filename = secure_filename(filename)
