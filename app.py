@@ -210,7 +210,7 @@ def add_radargram(project_id: int):
         else:
             abort(500, "Refuse adding radargram")
     else:
-        return jsonify({"Error": f"There is no project with project_id={id}"})
+        return jsonify({"Error": f"There is no project with project_id={project_id}"})
 
 
 @app.route('/api/projects/<int:project_id>/radargrams/<int:radargram_id>', methods=['DELETE'])
