@@ -190,7 +190,7 @@ def get_radargram_link(project_id: int, radargram_id: int):
 
 @app.route('/api/projects/<int:project_id>/radargrams', methods=['POST'])
 @auth.login_required
-@cross_origin()
+@cross_origin(origin='*', headers=['Content-Type', 'Authorization'])
 def add_radargram(project_id: int):
     import projectmanager, radargramsmanager
     project = projectmanager.get_project(project_id)
