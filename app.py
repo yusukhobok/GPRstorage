@@ -13,7 +13,18 @@ app = Flask(__name__)
 app.config.from_object(os.environ['APP_SETTINGS'])
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # CORS(app)
-cors = CORS(app, resources={r'/*': {"origins": '*'}})
+# cors = CORS(app, resources={r'/*': {"origins": '*'}})
+cors = CORS(app, resources={
+        r'/api/*': {
+            "Access-Control-Allow-Origin": '*',
+            "Access-Control-Allow-Credentials": True,
+            'supports_credentials': True
+        },
+    },
+    supports_credentials=True,
+    expose_headers="*"
+)
+
 db = SQLAlchemy(app)
 auth = HTTPBasicAuth()
 
