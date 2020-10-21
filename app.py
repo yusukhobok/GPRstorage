@@ -2,7 +2,7 @@ import os
 from flask import Flask, request, jsonify, abort, url_for, g
 from flask_sqlalchemy import SQLAlchemy
 from flask_httpauth import HTTPBasicAuth
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 from werkzeug.utils import secure_filename
 from transliterate import translit
 
@@ -190,6 +190,7 @@ def get_radargram_link(project_id: int, radargram_id: int):
 
 @app.route('/api/projects/<int:project_id>/radargrams', methods=['POST'])
 @auth.login_required
+@cross_origin()
 def add_radargram(project_id: int):
     import projectmanager, radargramsmanager
     project = projectmanager.get_project(project_id)
