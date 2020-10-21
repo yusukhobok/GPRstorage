@@ -9,9 +9,9 @@ from transliterate import translit
 import flask_s3
 from flask_s3 import FlaskS3
 
-app = Flask(__name__, static_url_path='', static_folder='')
-# CORS(app)
-cors = CORS(app, resources={r"/api/*": {"origins": "*"}}, allow_headers='Content-Type')
+app = Flask(__name__)
+CORS(app)
+# cors = CORS(app, resources={r"/api/*": {"origins": "*"}}, allow_headers='Content-Type')
 # app.config['CORS_HEADERS'] = 'Content-Type'
 
 app.config.from_object(os.environ['APP_SETTINGS'])
