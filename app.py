@@ -16,13 +16,13 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # cors = CORS(app, resources={r'/*': {"origins": '*'}})
 cors = CORS(app, resources={
         r'/api/*': {
-            "Access-Control-Allow-Origin": '*',
-            "Access-Control-Allow-Credentials": True,
-            'supports_credentials': True
+            "Access-Control-Allow-Origin": '*'
+            #"Access-Control-Allow-Credentials": True,
+            #'supports_credentials': True
         },
-    },
-    supports_credentials=True,
-    expose_headers="*"
+    }
+    #supports_credentials=True,
+    #expose_headers="*"
 )
 
 db = SQLAlchemy(app)
