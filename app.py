@@ -15,16 +15,18 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # CORS(app)
 # cors = CORS(app, resources={r'/*': {"origins": '*'}})
 # cors = CORS(app, resources={r'/*': {"origins": 'https://yusukhobok.github.io'}})
-cors = CORS(app, resources={
-        r'/api/*': {
-            "Access-Control-Allow-Origin": 'https://yusukhobok.github.io',
-            "Access-Control-Allow-Credentials": True,
-            'supports_credentials': True
-        },
-    },
-    supports_credentials=True,
-    expose_headers="*"
-)
+# cors = CORS(app, resources={
+#         r'/api/*': {
+#             "Access-Control-Allow-Origin": 'https://yusukhobok.github.io',
+#             "Access-Control-Allow-Credentials": True,
+#             'supports_credentials': True
+#         },
+#     },
+#     supports_credentials=True,
+#     expose_headers="*"
+# )
+cors = CORS()
+cors.init_app(app)
 
 db = SQLAlchemy(app)
 auth = HTTPBasicAuth()
