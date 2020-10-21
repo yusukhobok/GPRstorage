@@ -22,7 +22,7 @@ class ProductionConfig(Config):
 
 
 class StagingConfig(Config):
-    DEVELOPMENT = False #True
+    DEVELOPMENT = True
     DEBUG = True
     FLASKS3_BUCKET_NAME = "gprstorage"
 
