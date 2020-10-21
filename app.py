@@ -2,7 +2,7 @@ import os
 from flask import Flask, request, jsonify, abort, url_for, g
 from flask_sqlalchemy import SQLAlchemy
 from flask_httpauth import HTTPBasicAuth
-# from flask_cors import CORS
+from flask_cors import CORS
 from werkzeug.utils import secure_filename
 from transliterate import translit
 
@@ -11,15 +11,16 @@ from flask_s3 import FlaskS3
 
 app = Flask(__name__, static_url_path='', static_folder='')
 # CORS(app)
+cors = CORS(app, resources={r"/*": {"origins": "*"}})
 app.config.from_object(os.environ['APP_SETTINGS'])
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-@app.after_request
-def after_request(response):
-  response.headers.add('Access-Control-Allow-Origin', '*')
-  # response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
-  # response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
-  return response
+# @app.after_request
+# def after_request(response):
+#   response.headers.add('Access-Control-Allow-Origin', '*')
+#   # response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+#   # response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+#   return response
 
 db = SQLAlchemy(app)
 auth = HTTPBasicAuth()
