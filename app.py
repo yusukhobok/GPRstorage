@@ -19,7 +19,7 @@ cors = CORS(app, resources={
         r'/api/*': {
             "Access-Control-Allow-Origin": 'https://yusukhobok.github.io',
             "Access-Control-Allow-Credentials": True,
-            'supFports_credentials': True
+            'supports_credentials': True
         },
     },
     supports_credentials=True,
