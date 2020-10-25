@@ -75,7 +75,7 @@ def get_users():
     if g.user.username == "yuri":
         from models import User
         users = User.query.all()
-        return jsonify({"users": [user.username for user in users]})
+        return jsonify({"users": [{"username": user.username, "id": user.id} for user in users]})
     else:
         abort(400, "You don't have rights to show the list of users")
 
