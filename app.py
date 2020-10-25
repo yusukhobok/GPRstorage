@@ -69,11 +69,15 @@ def enter_user():
     else:
         abort(400, "There is no such username or password")
 
-# @app.route('/api/users', methods=['GET'])
-# def get_users():
-#     from models import User
-#     users = User.query.all()
-#     return jsonify({"users": [user.username for user in users]})
+@app.route('/api/users', methods=['GET'])
+@auth.login_required
+def get_users():
+    if g.user.username == "yuri":
+        from models import User
+        users = User.query.all()
+        return jsonify({"users": [user.username for user in users]})
+    else:
+        abort(400, "You don't have rights to show the list of users")
 
 @auth.verify_password
 def verify_password(username, password):

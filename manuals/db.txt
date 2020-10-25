@@ -17,6 +17,9 @@ curl -X POST -H "Content-Type: application/json" -d '{"username":"...","password
 Get user:
 curl https://gprstorage-stage.herokuapp.com/api/users/user_id
 
+Get all users:
+curl -u yuri:123 https://gprstorage-stage.herokuapp.com/api/users
+
 Get projects:
 curl -u yuri:123 https://gprstorage-stage.herokuapp.com/api/projects
 
