@@ -2,34 +2,28 @@ import os
 from flask import Flask, request, jsonify, abort, url_for, g
 from flask_sqlalchemy import SQLAlchemy
 from flask_httpauth import HTTPBasicAuth
-from flask_cors import CORS, cross_origin
+from flask_cors import CORS
 from werkzeug.utils import secure_filename
 from transliterate import translit
-
-import flask_s3
 from flask_s3 import FlaskS3
 
-app = Flask(__name__)
-CORS(app)
-# cors = CORS(app, resources={r"/api/*": {"origins": "*"}}, allow_headers='Content-Type')
-# app.config['CORS_HEADERS'] = 'Content-Type'
 
+# def create_app():
+app = Flask(__name__)
+app.app_context().push()
+CORS(app)
 app.config.from_object(os.environ['APP_SETTINGS'])
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-# @app.after_request
-# def after_request(response):
-#   response.headers.add('Access-Control-Allow-Origin', '*')
-#   # response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
-#   # response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
-#   return response
-
 db = SQLAlchemy(app)
 auth = HTTPBasicAuth()
-
 s3 = FlaskS3(app)
 s3.init_app(app)
-# flask_s3.create_all(app)
+    # return app, db, auth
+# app, db, auth = create_app()
+
+@app.route('/', methods=['GET'])
+def hello():
+    return(jsonify({"message": "HELLO"}), 200)
 
 
 @app.route('/api/users/registration', methods=['POST'])
